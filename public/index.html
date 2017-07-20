@@ -106,6 +106,8 @@ fetch(endpoint)
   .then(blob => blob.json())
   .then(data => cities.push(...data));
 
+// at this point^ we have an array with all of our data.
+
 // Now we need a function that matches up city data with the user input
 function findMatches(wordToMatch, cities) {
   return cities.filter(place => {
@@ -113,14 +115,14 @@ function findMatches(wordToMatch, cities) {
     return place.city.match(regex) || place.state.match(regex);
   });
 }
-
-// we have the above function to match stuff, now we need a function that
-// displays the matched stuff
+// ^We created a RegExp, which we use because we want to match user input with our
+// user input. The above doesn't call the function.
 
 function displayMatches() {
   const matchArray = findMatches(this.value, cities);
   const html = matchArray.map(place => {
     const regex = new RegExp(this.value, 'gi');
+    // This regexp is being called against the contents of matchArray)
     const cityName = place.city.replace(regex, `<span class="hl">${this.value}</span>`);
     const stateName = place.state.replace(regex, `<span class="hl">${this.value}</span>`);
     return `
@@ -129,6 +131,8 @@ function displayMatches() {
       <span class="population">${place.population}</span>
     </li>
     `;
+    // Since this is the map() method, it will return an <li> for each item in
+    // the matchArray array.
   }).join('');
   suggestions.innerHTML = html;
 }
